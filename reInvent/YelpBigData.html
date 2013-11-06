@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>YelpBigData</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="YelpBigData"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-11-29 08:03:19 PST"/>
+<meta name="author" content="Jim Blomo"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+
+<link rel="stylesheet" type="text/css" href="production/common.css" />
+<link rel="stylesheet" type="text/css" href="production/screen.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="production/projection.css" media="projection" />
+<link rel="stylesheet" type="text/css" href="production/yelp.css" media="projection" />
+<link rel="stylesheet" type="text/css" href="production/presenter.css" media="presenter" />
+<link href='https://fonts.googleapis.com/css?family=Dosis:800|Ubuntu' rel='stylesheet' type='text/css'>
+
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">YelpBigData</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Yelp's Big Data</a>
+<ul>
+<li><a href="#sec-1-1">1.1 AWS usage</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 How Big?</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Dimensionality</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Solutions</a>
+<ul>
+<li><a href="#sec-3-1">3.1 Details</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Review Highlights</a>
+<ul>
+<li><a href="#sec-4-1">4.1 Example</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 Query to Category</a>
+<ul>
+<li><a href="#sec-5-1">5.1 Query to Category</a>
+<ul>
+<li><a href="#sec-5-1-1">5.1.1 Unstructured Data</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 Developer Speed</a>
+<ul>
+<li><a href="#sec-6-1">6.1 Non Blocking</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 mrjob</a>
+<ul>
+<li><a href="#sec-7-1">7.1 Details</a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8 Word Count</a>
+<ul>
+<li><a href="#sec-8-1">8.1 Details</a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9 Open Source Suite</a>
+<ul>
+<li><a href="#sec-9-1">9.1 Too many to talk about</a></li>
+</ul>
+</li>
+<li><a href="#sec-10">10 Hiring</a>
+<ul>
+<li><a href="#sec-10-1">10.1 We are Hiring</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Yelp's Big Data &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  Jim Blomo
+</p>
+<p>
+  Engineering Manager - Yelp
+</p>
+<p>
+  Lecturer - UC Berkeley
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> AWS usage &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ul>
+<li>We use EMR for batch processing
+</li>
+<li>Site is hosted in our own datacenters
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> How Big? &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-2">
+
+<ul>
+<li>250+ GB compressed logs / day
+</li>
+<li>7+ TB in databases
+</li>
+</ul>
+
+<p><img src="img/yelp-growth.png"  alt="img/yelp-growth.png" />
+</p>
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Dimensionality &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-2-1">
+
+<ul>
+<li>If you hear 10 talks on Big Data, you'll likely hear 11 definitions
+</li>
+<li>Liberal def: anytime you can't process data on one computer
+</li>
+<li>there's no excuse with things like Hadoop/EMR available
+</li>
+<li>Our Big Data is TBs of logs and DB data, growing quickly
+</li>
+<li>Database mostly stored in MySQL
+</li>
+<li>An unusual feature of our data is the variety:
+<ul>
+<li>review text, photos, checkins, menu data, friends, PMs
+</li>
+</ul>
+
+</li>
+<li>Interesting mix of structured and unstructured. And unstructured IN
+     structured!
+</li>
+<li>Derived data additionally stored in S3, HyperTable
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Solutions &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-3">
+
+<dl>
+<dt>Analytics</dt><dd>Search Relevance, Usage Trends
+</dd>
+<dt>Data summarization</dt><dd>Review Highlights, Search Behavior
+</dd>
+<dt>Machine Learning</dt><dd>Spam Filtering, Advertising Optimization
+</dd>
+</dl>
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Details &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-3-1">
+
+<ul>
+<li>Looking at mobile vs. desktop usage
+</li>
+<li>What types of ads are clicked by what types of people?
+</li>
+<li>What are the most important factors in a search? What categories are
+     correlated with a query? 
+</li>
+<li>Spam and Advertising have user models that we update nightly
+</li>
+<li>These models use a mixture of structured data from DB dumps and log data
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Review Highlights &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-4">
+
+<p><img src="img/review-highlights.png"  alt="img/review-highlights.png" />
+</p>
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Example &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-4-1">
+
+<ul>
+<li>Unstructured data (reviews) in structured data (review table in DB)
+</li>
+<li>Find common phrases in business, that are relatively unique across
+     businesses
+</li>
+<li>One of my favorite bars in SF
+</li>
+<li>Get a sense of the local flavor of the business without reading literally 2000 reviews
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Query to Category &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-5">
+
+<ul>
+<li>When people search for <b>Pool</b>, what do they mean?
+</li>
+<li>Swimming pool?
+</li>
+<li>Billiards?
+</li>
+<li>Home pool cleaning?
+</li>
+</ul>
+
+
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Query to Category &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h3>
+<div class="outline-text-3" id="text-5-1">
+
+<ul>
+<li>When people search for <b>Pool</b>, what do they mean?
+</li>
+<li>Swimming pool?
+</li>
+<li>Billiards?
+</li>
+<li>Home pool cleaning?
+</li>
+</ul>
+
+<p><img src="img/pool_table_in_pool.jpg"  alt="img/pool_table_in_pool.jpg" />
+</p>
+</div>
+
+<div id="outline-container-5-1-1" class="outline-4">
+<h4 id="sec-5-1-1"><span class="section-number-4">5.1.1</span> Unstructured Data &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h4>
+<div class="outline-text-4" id="text-5-1-1">
+
+<ul>
+<li>We need to look at user behavior to better understand intent
+</li>
+<li>Use search logs to connect searches with the businesses customers end up on
+</li>
+<li>Different per country? Per city? Per person?
+</li>
+</ul>
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Developer Speed &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
+<div class="outline-text-2" id="text-6">
+
+<ul>
+<li>Try big ideas in development
+</li>
+<li>Deploy without coordination
+</li>
+<li>Launch innovative features faster than competition
+</li>
+</ul>
+
+<p><img src="img/matrix-dodge.jpg"  alt="img/matrix-dodge.jpg" />
+</p>
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> Non Blocking &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-6-1">
+
+<ul>
+<li>Developers are never blocked on resources
+</li>
+<li>We spend very little effort maintaining a cluster
+</li>
+<li>Zero effort on thinking about how to properly schedule dev jobs, prod jobs,
+     and dependencies inbetween
+</li>
+<li>Products go out as soon as they are ready
+</li>
+<li>Includes access to logs: S3 scales as a datastore
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> mrjob &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
+<div class="outline-text-2" id="text-7">
+
+<p><img src="img/mrjob_large.png"  alt="img/mrjob_large.png" />
+</p><ul>
+<li>Hadoop Streaming jobs in Python
+</li>
+<li>Runs locally, on Hadoop, in EMR
+</li>
+<li>Higher level abstractions: chaining jobs together
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> Details &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-7-1">
+
+<ul>
+<li>OpenSource solution: mrjob, runs via Hadoop Streaming
+</li>
+<li>Python, specify a class with a mapper and reducer, done
+</li>
+<li>Let's developers test on their local workstation on smaller sets, spin up
+     EMR clusters when needed
+</li>
+<li>Can also run on in-house Hadoop cluster
+</li>
+<li>Additionally manages dependencies, bootstraping
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Word Count &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-8">
+
+
+
+
+<pre class="src src-python"><span style="color: #a020f0;">from</span> mrjob.job <span style="color: #a020f0;">import</span> MRJob
+
+<span style="color: #a020f0;">class</span> <span style="color: #228b22;">MRWordCounter</span>(MRJob):
+    <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">mapper</span>(<span style="color: #a020f0;">self</span>, key, line):
+        <span style="color: #a020f0;">for</span> word <span style="color: #a020f0;">in</span> line.split():
+            <span style="color: #a020f0;">yield</span> word, 1
+
+    <span style="color: #a020f0;">def</span> <span style="color: #0000ff;">reducer</span>(<span style="color: #a020f0;">self</span>, word, occurrences):
+        <span style="color: #a020f0;">yield</span> word, <span style="color: #7a378b;">sum</span>(occurrences)
+
+<span style="color: #a020f0;">if</span> <span style="color: #7a378b;">__name__</span> == <span style="color: #8b2252;">'__main__'</span>:
+    MRWordCounter.run()
+</pre>
+
+
+</div>
+
+<div id="outline-container-8-1" class="outline-3">
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> Details &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-8-1">
+
+<ul>
+<li>No demo complete without good old word count!
+</li>
+<li>If you're used to Hadoop, you'll see main differences are
+<ul>
+<li>untyped key-value inuput
+</li>
+<li><code>yield</code> instead of <code>emit</code>
+</li>
+</ul>
+
+</li>
+<li>Developers can test this locally, including inline in unit tests, then send
+     to AWS EMR on a much larger set of data
+</li>
+<li>You can iterate very quickly on your jobs
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Open Source Suite &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-9">
+
+<dl>
+<dt>mrjob</dt><dd>Run MapReduce jobs on Hadoop or Amazon Web Services
+</dd>
+<dt>s3mysqldump</dt><dd>Dump MySQL tables to s3, and parse them
+</dd>
+<dt>EMRio</dt><dd>Elastic MapReduce instance optimizer
+</dd>
+<dt>tron</dt><dd>Next generation batch process scheduling and management
+</dd>
+<dt>firefly</dt><dd>web application aimed at powerful, flexible time series graphing
+</dd>
+<dt>Many More</dt><dd><a href="http://opensource.yelp.com/">opensource.yelp.com</a> and
+    <a href="https://github.com/Yelp">github.com/Yelp</a>
+</dd>
+</dl>
+
+
+</div>
+
+<div id="outline-container-9-1" class="outline-3">
+<h3 id="sec-9-1"><span class="section-number-3">9.1</span> Too many to talk about &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-9-1">
+
+<ul>
+<li>We use mrjob for processing MySQL data as well:
+</li>
+<li><code>s3mysqldump</code> regularly takes MySQL data and uploads it for S3 for general
+     processing
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Hiring &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-10">
+
+<p><img src="img/yelp-careers.png"  alt="img/yelp-careers.png" />
+</p>
+<p>
+<a href="http://www.yelp.com/careers">yelp.com/careers</a>
+</p>
+</div>
+
+<div id="outline-container-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> We are Hiring &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-10-1">
+
+<ul>
+<li>Position on almost every team
+</li>
+<li>We want to connect everybody on earth with the great local businesses in
+     their area
+</li>
+<li>Need your help to make more open source solutions, apply them to
+     interesting problems
+</li>
+</ul>
+
+
+
+
+
+
+<script type="text/javascript" src="production/org-html-slideshow.js"></script>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-11-29 08:03:19 PST</p>
+<p class="author">Author: Jim Blomo</p>
+<p class="creator">Org version 7.8.02 with Emacs version 23</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

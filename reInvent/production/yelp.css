@@ -1,0 +1,23 @@
+body {
+   background: #E7DDD4 url('../img/burstl.png') no-repeat fixed bottom right;
+   color: #3D1B1C;
+   font-family: 'Ubuntu', sans-serif;
+}
+
+/* Use all headings as slide titles, regardless of level. */
+h1,h2,h3,h4,h5,h6,h7,h8 {
+   color: #C41200;
+   /* original scheme
+	* color: #CE3F37;
+	*/
+   font-family: 'Dosis', sans-serif;
+}
+
+li {
+   list-style-image: url('../img/yelp_logos.png');
+}
+
+dd {
+	color: #BC9353;
+}
+
