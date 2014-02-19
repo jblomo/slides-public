@@ -1,0 +1,1148 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>WhereHadoop</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="WhereHadoop"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2014-02-19T03:24-0800"/>
+<meta name="author" content="Jim Blomo"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+
+<link rel="stylesheet" type="text/css" href="production/common.css" />
+<link rel="stylesheet" type="text/css" href="production/screen.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="production/projection.css" media="projection" />
+<link rel="stylesheet" type="text/css" href="production/yelp.css" media="projection" />
+<link rel="stylesheet" type="text/css" href="production/presenter.css" media="presenter" />
+<link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Basic' rel='stylesheet' type='text/css'>
+
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">WhereHadoop</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 OH HADOOP, WHERE ART THOU?</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Hi</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 Step Back</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Ideal</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Don't Exist</a>
+<ul>
+<li><a href="#sec-3-1">3.1 Unfortunately</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Multiple Systems</a>
+<ul>
+<li><a href="#sec-4-1">4.1 No Fits</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 Transforming Data</a>
+<ul>
+<li><a href="#sec-5-1">5.1 Answer</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 Contrast</a>
+<ul>
+<li><a href="#sec-6-1">6.1 Alternatives</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 Metrics</a>
+<ul>
+<li><a href="#sec-7-1">7.1 Ideally</a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8 Metrics Server</a>
+<ul>
+<li><a href="#sec-8-1">8.1 Output</a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9 Contrast</a>
+<ul>
+<li><a href="#sec-9-1">9.1 Mutable</a></li>
+</ul>
+</li>
+<li><a href="#sec-10">10 Transform Data</a></li>
+<li><a href="#sec-11">11 Building MyISAM files</a>
+<ul>
+<li><a href="#sec-11-1">11.1 Details</a></li>
+</ul>
+</li>
+<li><a href="#sec-12">12 Database Views</a>
+<ul>
+<li><a href="#sec-12-1">12.1 DB</a></li>
+</ul>
+</li>
+<li><a href="#sec-13">13 System Views</a>
+<ul>
+<li><a href="#sec-13-1">13.1 Lessons</a></li>
+</ul>
+</li>
+<li><a href="#sec-14">14 Contrast</a>
+<ul>
+<li><a href="#sec-14-1">14.1 Alternative to views</a></li>
+</ul>
+</li>
+<li><a href="#sec-15">15 Source: MySQL</a>
+<ul>
+<li><a href="#sec-15-1">15.1 Challenge</a></li>
+</ul>
+</li>
+<li><a href="#sec-16">16 <code>S3mysqldump</code></a>
+<ul>
+<li><a href="#sec-16-1">16.1 Overview</a></li>
+</ul>
+</li>
+<li><a href="#sec-17">17 <code>mysqldump</code></a>
+<ul>
+<li><a href="#sec-17-1">17.1 Why</a></li>
+</ul>
+</li>
+<li><a href="#sec-18">18 Upload to S3</a>
+<ul>
+<li><a href="#sec-18-1">18.1 Wraps up</a></li>
+</ul>
+</li>
+<li><a href="#sec-19">19 Table Change Log</a>
+<ul>
+<li><a href="#sec-19-1">19.1 log</a></li>
+</ul>
+</li>
+<li><a href="#sec-20">20 Hadoop Merge</a>
+<ul>
+<li><a href="#sec-20-1">20.1 merge process</a></li>
+</ul>
+</li>
+<li><a href="#sec-21">21 Alternatives</a>
+<ul>
+<li><a href="#sec-21-1">21.1 issues</a></li>
+</ul>
+</li>
+<li><a href="#sec-22">22 Overview</a></li>
+<li><a href="#sec-23">23 Tips: Input</a>
+<ul>
+<li><a href="#sec-23-1">23.1 Change Gear</a></li>
+</ul>
+</li>
+<li><a href="#sec-24">24 Logging Format</a>
+<ul>
+<li><a href="#sec-24-1">24.1 Notes</a></li>
+</ul>
+</li>
+<li><a href="#sec-25">25 Resources</a></li>
+<li><a href="#sec-26">26 Tips: Output</a></li>
+<li><a href="#sec-27">27 Outputs</a>
+<ul>
+<li><a href="#sec-27-1">27.1 AWS</a></li>
+</ul>
+</li>
+<li><a href="#sec-28">28 Resources</a></li>
+<li><a href="#sec-29">29 Take Aways</a></li>
+<li><a href="#sec-30">30 Thank You</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> OH HADOOP, WHERE ART THOU? &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  Jim Blomo
+</p>
+<p>
+  <a href="https://twitter.com/jimblomo">@jimblomo</a>
+</p>
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Hi &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ul>
+<li>Engineering Manager on one of Yelp's Data mining teams
+</li>
+<li>Lots of interesting talks specifically about Hadoop
+</li>
+<li>This talk is a bit different: it's about the stuff <b>around</b> Hadoop
+</li>
+<li>How do we get data in? Data out?  Lessons learned.
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Step Back &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-2">
+
+<ul>
+<li>What's the ideal data store?
+</li>
+<li><b>Fast</b>: ingestion, point lookups, analytics, batch processing
+</li>
+<li><b>Big</b>: user data, all events, no archiving
+</li>
+<li><b>Flexible</b>: no downtime for schema changes, hold any type of data without
+    preparation
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Ideal &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-2-1">
+
+<ul>
+<li>We want something that is fast, in all the ways. OLTP, OLAP, machine
+     learning. We want an algorithm, we run it on this data storage
+</li>
+<li>Obviously we need to handle tons of data, and we're realizing it can be
+     best to throw nothing away
+</li>
+<li>One of the rallying cries for NoSQL is ability to just throw stuff into a
+     data storage without planning a consistent schema ahead of time. So let us
+     do that!
+</li>
+<li>Store and process any type of formatted data, not just text with arbitrary
+     fields: multimedia, like images or video.
+</li>
+<li>Who has this data store? Who has a single place that can handle all these
+     things?
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Don't Exist &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-3">
+
+<p>  <img src="img/true.jpg"  alt="img/true.jpg" />
+</p>
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Unfortunately &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-3-1">
+
+<ul>
+<li>Unfortunately, this data store doesn't exist
+</li>
+<li>Engineering is fundamentally about trade-offs, and when making a system
+     fast for one purpose, you might make it unsuited for another
+</li>
+<li>So what do we do? Can't have what we want, so we throw a fit. right?
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Multiple Systems &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-4">
+
+<ul>
+<li>Use systems well suited for a purpose
+</li>
+<li>Different purposes =&gt; different systems
+</li>
+<li>Trade-off: management complexity
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> No Fits &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-4-1">
+
+<ul>
+<li>So we can't have it all in one system, we use multiple systems
+</li>
+<li>We'll get into the specifics later, but the big idea, and one you've
+     heard before, is use the tool for the job
+</li>
+<li>Now, we're still making a trade-off here! Managing multiple systems is
+     typically more difficult than an all-in-one system
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Transforming Data &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
+<div class="outline-text-2" id="text-5">
+
+<ul>
+<li>Most important management problem: having the right data!
+</li>
+<li>Hadoop transforms data into purposeful formats
+</li>
+</ul>
+
+
+<p>
+  <img src="img/transformed.jpg"  alt="img/transformed.jpg" />
+</p>
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Answer &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-5-1">
+
+<ul>
+<li>Ultimately, this is the answer to the question "Oh Hadoop, where Art
+     thou?"
+</li>
+<li>Hadoop is in the middle of all of the systems that have been chosen to
+     fulfill a specific purpose
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Contrast &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-6">
+
+<ul>
+<li>You have big data? You need a Hadoop.
+</li>
+<li>Analytics too slow? You need a Hadoop.
+</li>
+<li>Running out of memory? You need a Hadoop.
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> Alternatives &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-6-1">
+
+<ul>
+<li>The alternative to this view that Hadoop's best fit is transforming data
+     for appropriate systems is that Hadoop is the solution itself for
+     whatever problem you have
+</li>
+<li>Most typical is "too much data? use Hadoop to process it", but lots of
+     variation
+</li>
+<li>This puts too much focus on Hadoop, and not enough on the surrounding
+     systems
+</li>
+<li>How do those systems recover from error? How do we know what the source of
+     truth is? Can we re-run processing if there is more data?
+</li>
+<li>Let's look at some examples
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Metrics &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-7">
+
+<ul>
+<li>Metrics are summary of all events
+</li>
+<li>Input: storage of all events
+</li>
+<li>Output: quick lookup by time of event counts
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> Ideally &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-7-1">
+
+<ul>
+<li>Ideally we'd like to store all events
+</li>
+<li>When we want metrics we just do a query of all of them: SELECT count(*)
+     GROUP by day
+</li>
+<li>But we don't have this ideal system that can quickly group over all time
+</li>
+<li>So instead we pre-calculate the events that occurred, and put them in a
+     format that can easily lookup a smaller number of data points, with some
+     filters like date range
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Metrics Server &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-8">
+
+<ul>
+<li>Metrics served out of MySQL
+</li>
+<li>Input: JSON logs
+</li>
+<li>Output: MySQL <code>LOAD DATA</code> (CSV)
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-8-1" class="outline-3">
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> Output &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-8-1">
+
+<ul>
+<li>So we view this as a transformation of data from event data in JSON
+</li>
+<li>To a format that can be ingested by MySQL for a purpose built metrics
+     system
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Contrast &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
+<div class="outline-text-2" id="text-9">
+
+<ul>
+<li>Read logs
+</li>
+<li>Connect to DB
+</li>
+<li>Increment counter
+</li>
+</ul>
+
+
+<p>
+  <img src="img/politition.jpg"  alt="img/politition.jpg" />
+</p>
+</div>
+
+<div id="outline-container-9-1" class="outline-3">
+<h3 id="sec-9-1"><span class="section-number-3">9.1</span> Mutable &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-9-1">
+
+<ul>
+<li>Instead of doing a transformation of data, we are using Hadoop to directly update a system
+</li>
+<li>Still using Hadoop! Still processing big data! But not in a way that takes
+     the whole system into account
+</li>
+<li>What if all the logs were not uploaded. How do we run this job again? If
+     this is filling multiple metrics and we wanted to add some, how do we
+     re-run this job?
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Transform Data &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-10">
+
+<ul>
+<li>Output of many Yelp jobs are MySQL consumable format
+</li>
+<li><code>mrjob</code> can be run inside a Python process, which loads data from result
+</li>
+<li>Extreme case: avoid MySQL load from ingestion by building MyISAM files
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> Building MyISAM files &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-11">
+
+<ul>
+<li>Hadoop job downloads a CSV output
+</li>
+<li>Local MySQL instance run on worker node
+</li>
+<li><code>LOAD DATA</code> executed locally, MyISAM file uploaded to S3
+</li>
+<li><code>MYI</code> and <code>MYD</code> files synced to MySQL datadir
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-11-1" class="outline-3">
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> Details &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-11-1">
+
+<ul>
+<li>We are still transforming data. So typically a first step in this process
+     is creating CSV output. This is also useful for other applications that may
+     want to use this data
+</li>
+<li>A Hadoop job will download the CSV file, the path taken from input, and
+     create a MyISAM file on a local instance of S3
+</li>
+<li><code>myisampack</code> is run on the result, and then uploaded to S3
+</li>
+<li>Files downloaded locally and installed on MySQL machine. no need to
+     restart, MySQL will recognize the file once it's read
+</li>
+<li>Just another example of Hadoop's ability to produce a wide range of outputs
+     from inputs: it's strength
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> Database Views &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-12">
+
+<ul>
+<li>Concept of transformed data has a parallel in DB world
+</li>
+<li>Views: result set of a stored query
+</li>
+<li>Materialized View: pre-executed query, results physically saved
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-12-1" class="outline-3">
+<h3 id="sec-12-1"><span class="section-number-3">12.1</span> DB &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-12-1">
+
+<ul>
+<li>Database views are defined with a query. The output of the query can itself
+     be queried like a table
+</li>
+<li>Used to simplify querying while being able to have normalized data storage.
+</li>
+<li>Our metrics query is an example: if the database contained all events, but
+     we didn't want an analyst who only cared about events per day to have to
+     understand the event schema
+</li>
+<li>Normal views will run the definition query in the background. Materialized
+     views will logically run the query every time the source table is updated
+     and keep around the results
+</li>
+<li>That way, when a view is queried, it can look up a "cached" version
+</li>
+<li>Unfortunately, these views are only available inside the database
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> System Views &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-13">
+
+<ul>
+<li>Hadoop materializes views of data across systems
+</li>
+<li>Views should be updated when source data changes
+</li>
+<li>Views do not have state beyond the source data
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-13-1" class="outline-3">
+<h3 id="sec-13-1"><span class="section-number-3">13.1</span> Lessons &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-13-1">
+
+<ul>
+<li>The database world has done a good job creating systems that are consistent
+     and understandable
+</li>
+<li>We can learn a lot of the lessons from their features, even if a relational
+     database doesn't fit some of our problems
+</li>
+<li>These properties allow your multiple systems to stay in sync, recover more
+     easily, and the operators to understand the state and flow of data
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> Contrast &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-14">
+
+<ul>
+<li>Hadoop and other process simultaneously update systems
+</li>
+<li>There is no ultimate data store - multiple systems updated in parallel
+</li>
+<li>Inconsistencies impossible to resolve
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-14-1" class="outline-3">
+<h3 id="sec-14-1"><span class="section-number-3">14.1</span> Alternative to views &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-14-1">
+
+<ul>
+<li>The alternative to views is that all systems have some shade of truth
+</li>
+<li>If one data store holds events, and another holds counts of events as
+     recorded from the webserver, when data is inconsistent, impossible to
+     resolve.
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-15" class="outline-2">
+<h2 id="sec-15"><span class="section-number-2">15</span> Source: MySQL &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-15">
+
+<ul>
+<li>Views that combine OLTP data with logs
+</li>
+<li>Search behavior per category
+</li>
+<li>Queries in logs; categories in database
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-15-1" class="outline-3">
+<h3 id="sec-15-1"><span class="section-number-3">15.1</span> Challenge &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-15-1">
+
+<ul>
+<li>We regularly run algorithms that need data on behavior around and item, and
+     properties of that item
+</li>
+<li>When someone searches for "burrito" we should probably show results in the
+     Mexican restaurant category, rather than a sandwich place that a reviewer
+     mentions burrito in
+</li>
+<li>So we need data that is stored in the database to be available to Hadoop
+     jobs that are generating metrics views
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-16" class="outline-2">
+<h2 id="sec-16"><span class="section-number-2">16</span> <code>S3mysqldump</code> &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-16">
+
+<ul>
+<li><code>mysqldump</code> writes out data in <code>INSERT</code> format
+</li>
+<li>"table change logs" capture incremental change
+</li>
+<li>Hadoop merges incremental changes into complete dumps
+</li>
+<li>Jobs can read merged dumps and write out another format
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-16-1" class="outline-3">
+<h3 id="sec-16-1"><span class="section-number-3">16.1</span> Overview &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-16-1">
+
+<ul>
+<li>mysqldump used to get data from MySQL
+</li>
+<li>Python process uploads either full or partial dump to S3
+</li>
+<li>Hadoop merges these partials dumps into a format that can be read by later
+     jobs
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-17" class="outline-2">
+<h2 id="sec-17"><span class="section-number-2">17</span> <code>mysqldump</code> &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-17">
+
+<ul>
+<li>Can be used locally
+</li>
+<li>Reliable text serialization of data
+</li>
+</ul>
+
+<p>  <img src="img/piggyback.png"  alt="img/piggyback.png" />
+</p>
+</div>
+
+<div id="outline-container-17-1" class="outline-3">
+<h3 id="sec-17-1"><span class="section-number-3">17.1</span> Why &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-17-1">
+
+<ul>
+<li>We currently don't allow incoming connections from our EMR Hadoop clusters
+     to any database, so needed something to dump locally
+</li>
+<li>We use Hadoop Streaming for most of our Hadoop jobs, so having a regular
+     text format for data was very important
+</li>
+<li>Alternatives like Sqoop expect to run from Hadoop, have Java serialization
+     format
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-18" class="outline-2">
+<h2 id="sec-18"><span class="section-number-2">18</span> Upload to S3 &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-18">
+
+<ul>
+<li>Writeen using Python boto library
+</li>
+<li>Uses multipart upload for large files
+</li>
+<li>Open Source: <a href="https://github.com/Yelp/s3mysqldump">https://github.com/Yelp/s3mysqldump</a>
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-18-1" class="outline-3">
+<h3 id="sec-18-1"><span class="section-number-3">18.1</span> Wraps up &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-18-1">
+
+<ul>
+<li>The part we wrote kicks off the mysqldump, splits up the file if necessary
+     for multipart uploads, handles upload
+</li>
+<li>Open source, available for download
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-19" class="outline-2">
+<h2 id="sec-19"><span class="section-number-2">19</span> Table Change Log &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-19">
+
+<ul>
+<li><code>mysql</code> trigger on changes to data
+</li>
+<li>Write out change to another table
+</li>
+<li>&lt;table, change-type, row-id, timestamp&gt;
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-19-1" class="outline-3">
+<h3 id="sec-19-1"><span class="section-number-3">19.1</span> log &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-19-1">
+
+<ul>
+<li>Log is used to grab IDs that have changed past a given time
+</li>
+<li>When generating an incremental, use the timestamp to grab all IDs that have
+     changed since the last upload
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-20" class="outline-2">
+<h2 id="sec-20"><span class="section-number-2">20</span> Hadoop Merge &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-20">
+
+<ul>
+<li>Merges incremental upload with the last successful merge
+</li>
+<li>Full dumps are completed weekly to catch deleted rows, schema changes
+</li>
+<li>Merge code can read <code>INSERT</code> format
+</li>
+</ul>
+
+<p>  <img src="img/merged.jpg"  alt="img/merged.jpg" />
+</p>
+</div>
+
+<div id="outline-container-20-1" class="outline-3">
+<h3 id="sec-20-1"><span class="section-number-3">20.1</span> merge process &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-20-1">
+
+<ul>
+<li>Fairly straight forward, group by identifiers in the table, and output only
+     the most recent update
+</li>
+<li>Advantage of Hadoop: can transform data from other formats
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-21" class="outline-2">
+<h2 id="sec-21"><span class="section-number-2">21</span> Alternatives &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-21">
+
+<ul>
+<li>Sqoop: Hadoop driven database extraction
+</li>
+<li>Espresso: LinkedIn project with data change capture
+</li>
+<li>MySQL binlog parsing
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-21-1" class="outline-3">
+<h3 id="sec-21-1"><span class="section-number-3">21.1</span> issues &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-21-1">
+
+<ul>
+<li>Sqoop already discussed: non-local, Java dependencies
+</li>
+<li>Espresso as a installable system does not sound ready, plus would be a huge
+     project to migrate to
+</li>
+<li>Not as reliable text serialization, statement logging insufficient for many
+     changes
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-22" class="outline-2">
+<h2 id="sec-22"><span class="section-number-2">22</span> Overview &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-22">
+
+<p>  <img src="img/hadoop-overview.png"  alt="img/hadoop-overview.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-23" class="outline-2">
+<h2 id="sec-23"><span class="section-number-2">23</span> Tips: Input &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-23">
+
+<p>  <img src="workers.png"  alt="workers.png" />
+</p>
+</div>
+
+<div id="outline-container-23-1" class="outline-3">
+<h3 id="sec-23-1"><span class="section-number-3">23.1</span> Change Gear &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-23-1">
+
+<ul>
+<li>So if Hadoop's strength is transforming data, I want to talk about some tips
+     for making sure your data is easily transformed and useful for a variety of
+     outputs
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-24" class="outline-2">
+<h2 id="sec-24"><span class="section-number-2">24</span> Logging Format &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-24">
+
+<ul>
+<li>Use a machine parsable format for logs: JSON, Avro, etc.
+</li>
+<li>Aim for one line per service per request
+</li>
+<li>Use standard fields, but allow for "extras"
+</li>
+<li>Try to log every ID on a page
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-24-1" class="outline-3">
+<h3 id="sec-24-1"><span class="section-number-3">24.1</span> Notes &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-24-1">
+
+<ul>
+<li>Yelp uses Ranger
+</li>
+<li>We're still standardizing on fields, but still is causing some pain
+</li>
+<li>Must allow your developers to iterate quickly, but there's two iterations
+     to consider: the developer consuming the logs, and the developer logging
+</li>
+<li>Eg. in a Yelp search result, we'd like to see every business ID we
+     displayed, even if it wasn't clicked so we can collect click-through
+     metrics
+</li>
+<li>Some of your pages may have "similar items"&hellip; same deal
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-25" class="outline-2">
+<h2 id="sec-25"><span class="section-number-2">25</span> Resources &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-25">
+
+<ul>
+<li><a href="#Unified-Logging-Infrastructure-for-Data-Analytics-at-Twitter">http://sites.computer.org/debull/A12june/pipeline.pdf</a>
+</li>
+<li>Uses standard fields for automated metrics calculations
+</li>
+<li><a href="#Building-LinkedIn-s-Real-time-Activity-Data-Pipeline">http://sites.computer.org/debull/A12june/pipeline.pdf</a>
+</li>
+<li>Automatic materialized view of logs based on standard fields
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-26" class="outline-2">
+<h2 id="sec-26"><span class="section-number-2">26</span> Tips: Output &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-26">
+
+<p>  <img src="img/output.jpg"  alt="img/output.jpg" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-27" class="outline-2">
+<h2 id="sec-27"><span class="section-number-2">27</span> Outputs &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-27">
+
+<ul>
+<li>Know your S3 consistency guarantees
+</li>
+<li>Hadoop OutputFormats provide flexibility 
+</li>
+<li>Use standard formats and paths
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-27-1" class="outline-3">
+<h3 id="sec-27-1"><span class="section-number-3">27.1</span> AWS &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-27-1">
+
+<ul>
+<li>S3 Hint: there are almost none
+</li>
+<li>OutputFormats can give you ability to write in almost any format: to
+     multiple subdirectories, in a binary format, etc. Keep in mind the format
+     you'd like to transform to, and let Hadoop do the work
+</li>
+<li>Hive, HBase, others add-ons have expected path and output format. Even if
+     you're not going to use them now, default to their standard when writing
+     out. They've thought about issues and makes future compatibility easier
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-28" class="outline-2">
+<h2 id="sec-28"><span class="section-number-2">28</span> Resources &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-28">
+
+<ul>
+<li><a href="#S3mper-Consistency-in-the-Cloud">http://techblog.netflix.com/2014/01/s3mper-consistency-in-cloud.html</a>
+</li>
+<li><a href="#InfoQ-Exploring-Hadoop-OutputFormat">http://www.infoq.com/articles/HadoopOutputFormat/</a>
+</li>
+<li><a href="#Intro-to-Hive-Partitioning">http://www.brentozar.com/archive/2013/03/introduction-to-hive-partitioning/</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-29" class="outline-2">
+<h2 id="sec-29"><span class="section-number-2">29</span> Take Aways &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-29">
+
+<ul>
+<li>Hadoop is most effective as a system to transform data
+</li>
+<li>Data must be transformed for consumption by targeted systems
+</li>
+<li>Systems modeled as views are understandable, idempotent, robust
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-30" class="outline-2">
+<h2 id="sec-30"><span class="section-number-2">30</span> Thank You &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-30">
+
+<p>  <img src="img/smile.png"  alt="img/smile.png" />
+</p>
+
+
+
+<script type="text/javascript" src="production/org-html-slideshow.js"></script>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2014-02-19T03:24-0800</p>
+<p class="author">Author: Jim Blomo</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.2 with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 23</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

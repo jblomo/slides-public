@@ -1,0 +1,323 @@
+* OH HADOOP, WHERE ART THOU? :slide:center:
+  Jim Blomo
+
+  [[https://twitter.com/jimblomo][@jimblomo]]
+** Hi :notes:
+   + Engineering Manager on one of Yelp's Data mining teams
+   + Lots of interesting talks specifically about Hadoop
+   + This talk is a bit different: it's about the stuff *around* Hadoop
+   + How do we get data in? Data out?  Lessons learned.
+
+* Step Back :slide:
+  + What's the ideal data store?
+  + *Fast*: ingestion, point lookups, analytics, batch processing
+  + *Big*: user data, all events, no archiving
+  + *Flexible*: no downtime for schema changes, hold any type of data without
+    preparation
+** Ideal :notes:
+   + We want something that is fast, in all the ways. OLTP, OLAP, machine
+     learning. We want an algorithm, we run it on this data storage
+   + Obviously we need to handle tons of data, and we're realizing it can be
+     best to throw nothing away
+   + One of the rallying cries for NoSQL is ability to just throw stuff into a
+     data storage without planning a consistent schema ahead of time. So let us
+     do that!
+   + Store and process any type of formatted data, not just text with arbitrary
+     fields: multimedia, like images or video.
+   + Who has this data store? Who has a single place that can handle all these
+     things?
+
+* Don't Exist :slide:center:
+  [[file:img/true.jpg]]
+** Unfortunately :notes:
+   + Unfortunately, this data store doesn't exist
+   + Engineering is fundamentally about trade-offs, and when making a system
+     fast for one purpose, you might make it unsuited for another
+   + So what do we do? Can't have what we want, so we throw a fit. right?
+
+* Multiple Systems :slide:
+  + Use systems well suited for a purpose
+  + Different purposes => different systems
+  + Trade-off: management complexity
+** No Fits :notes:
+   + So we can't have it all in one system, we use multiple systems
+   + We'll get into the specifics later, but the big idea, and one you've
+     heard before, is use the tool for the job
+   + Now, we're still making a trade-off here! Managing multiple systems is
+     typically more difficult than an all-in-one system
+
+* Transforming Data :slide:two_col:
+  + Most important management problem: having the right data!
+  + Hadoop transforms data into purposeful formats
+
+  [[file:img/transformed.jpg]]
+** Answer :notes:
+   + Ultimately, this is the answer to the question "Oh Hadoop, where Art
+     thou?"
+   + Hadoop is in the middle of all of the systems that have been chosen to
+     fulfill a specific purpose
+
+* Contrast :slide:
+  + You have big data? You need a Hadoop.
+  + Analytics too slow? You need a Hadoop.
+  + Running out of memory? You need a Hadoop.
+** Alternatives :notes:
+   + The alternative to this view that Hadoop's best fit is transforming data
+     for appropriate systems is that Hadoop is the solution itself for
+     whatever problem you have
+   + Most typical is "too much data? use Hadoop to process it", but lots of
+     variation
+   + This puts too much focus on Hadoop, and not enough on the surrounding
+     systems
+   + How do those systems recover from error? How do we know what the source of
+     truth is? Can we re-run processing if there is more data?
+   + Let's look at some examples
+
+* Metrics :slide:
+  + Metrics are summary of all events
+  + Input: storage of all events
+  + Output: quick lookup by time of event counts
+** Ideally :notes:
+   + Ideally we'd like to store all events
+   + When we want metrics we just do a query of all of them: SELECT count(*)
+     GROUP by day
+   + But we don't have this ideal system that can quickly group over all time
+   + So instead we pre-calculate the events that occurred, and put them in a
+     format that can easily lookup a smaller number of data points, with some
+     filters like date range
+
+* Metrics Server :slide:
+  + Metrics served out of MySQL
+  + Input: JSON logs
+  + Output: MySQL =LOAD DATA= (CSV)
+** Output :notes:
+   + So we view this as a transformation of data from event data in JSON
+   + To a format that can be ingested by MySQL for a purpose built metrics
+     system
+
+* Contrast :slide:two_col:
+  + Read logs
+  + Connect to DB
+  + Increment counter
+
+  [[file:img/politition.jpg]]
+** Mutable :notes:
+   + Instead of doing a transformation of data, we are using Hadoop to directly update a system
+   + Still using Hadoop! Still processing big data! But not in a way that takes
+     the whole system into account
+   + What if all the logs were not uploaded. How do we run this job again? If
+     this is filling multiple metrics and we wanted to add some, how do we
+     re-run this job?
+
+* Transform Data :slide:
+  + Output of many Yelp jobs are MySQL consumable format
+  + =mrjob= can be run inside a Python process, which loads data from result
+  + Extreme case: avoid MySQL load from ingestion by building MyISAM files
+
+* Building MyISAM files :slide:
+  + Hadoop job downloads a CSV output
+  + Local MySQL instance run on worker node
+  + =LOAD DATA= executed locally, MyISAM file uploaded to S3
+  + =MYI= and =MYD= files synced to MySQL datadir
+** Details :notes:
+   + We are still transforming data. So typically a first step in this process
+     is creating CSV output. This is also useful for other applications that may
+     want to use this data
+   + A Hadoop job will download the CSV file, the path taken from input, and
+     create a MyISAM file on a local instance of S3
+   + =myisampack= is run on the result, and then uploaded to S3
+   + Files downloaded locally and installed on MySQL machine. no need to
+     restart, MySQL will recognize the file once it's read
+   + Just another example of Hadoop's ability to produce a wide range of outputs
+     from inputs: it's strength
+
+* Database Views :slide:
+  + Concept of transformed data has a parallel in DB world
+  + Views: result set of a stored query
+  + Materialized View: pre-executed query, results physically saved
+** DB :notes:
+   + Database views are defined with a query. The output of the query can itself
+     be queried like a table
+   + Used to simplify querying while being able to have normalized data storage.
+   + Our metrics query is an example: if the database contained all events, but
+     we didn't want an analyst who only cared about events per day to have to
+     understand the event schema
+   + Normal views will run the definition query in the background. Materialized
+     views will logically run the query every time the source table is updated
+     and keep around the results
+   + That way, when a view is queried, it can look up a "cached" version
+   + Unfortunately, these views are only available inside the database
+
+* System Views :slide:
+  + Hadoop materializes views of data across systems
+  + Views should be updated when source data changes
+  + Views do not have state beyond the source data
+** Lessons :notes:
+   + The database world has done a good job creating systems that are consistent
+     and understandable
+   + We can learn a lot of the lessons from their features, even if a relational
+     database doesn't fit some of our problems
+   + These properties allow your multiple systems to stay in sync, recover more
+     easily, and the operators to understand the state and flow of data
+
+* Contrast :slide:
+  + Hadoop and other process simultaneously update systems
+  + There is no ultimate data store - multiple systems updated in parallel
+  + Inconsistencies impossible to resolve
+** Alternative to views :notes:
+   + The alternative to views is that all systems have some shade of truth
+   + If one data store holds events, and another holds counts of events as
+     recorded from the webserver, when data is inconsistent, impossible to
+     resolve.
+
+* Source: MySQL :slide:
+  + Views that combine OLTP data with logs
+  + Search behavior per category
+  + Queries in logs; categories in database
+** Challenge :notes:
+   + We regularly run algorithms that need data on behavior around and item, and
+     properties of that item
+   + When someone searches for "burrito" we should probably show results in the
+     Mexican restaurant category, rather than a sandwich place that a reviewer
+     mentions burrito in
+   + So we need data that is stored in the database to be available to Hadoop
+     jobs that are generating metrics views
+
+* =S3mysqldump= :slide:
+  + =mysqldump= writes out data in =INSERT= format
+  + "table change logs" capture incremental change
+  + Hadoop merges incremental changes into complete dumps
+  + Jobs can read merged dumps and write out another format
+** Overview :notes:
+   + mysqldump used to get data from MySQL
+   + Python process uploads either full or partial dump to S3
+   + Hadoop merges these partials dumps into a format that can be read by later
+     jobs
+
+* =mysqldump= :slide:
+  + Can be used locally
+  + Reliable text serialization of data
+  [[file:img/piggyback.png]]
+** Why :notes:
+   + We currently don't allow incoming connections from our EMR Hadoop clusters
+     to any database, so needed something to dump locally
+   + We use Hadoop Streaming for most of our Hadoop jobs, so having a regular
+     text format for data was very important
+   + Alternatives like Sqoop expect to run from Hadoop, have Java serialization
+     format
+
+* Upload to S3 :slide:
+  + Writeen using Python boto library
+  + Uses multipart upload for large files
+  + Open Source: https://github.com/Yelp/s3mysqldump
+** Wraps up :notes:
+   + The part we wrote kicks off the mysqldump, splits up the file if necessary
+     for multipart uploads, handles upload
+   + Open source, available for download
+
+* Table Change Log :slide:
+  + =mysql= trigger on changes to data
+  + Write out change to another table
+  + <table, change-type, row-id, timestamp>
+** log :notes:
+   + Log is used to grab IDs that have changed past a given time
+   + When generating an incremental, use the timestamp to grab all IDs that have
+     changed since the last upload
+
+* Hadoop Merge :slide:
+  + Merges incremental upload with the last successful merge
+  + Full dumps are completed weekly to catch deleted rows, schema changes
+  + Merge code can read =INSERT= format
+  [[file:img/merged.jpg]]
+** merge process :notes:
+   + Fairly straight forward, group by identifiers in the table, and output only
+     the most recent update
+   + Advantage of Hadoop: can transform data from other formats
+
+* Alternatives :slide:
+  + Sqoop: Hadoop driven database extraction
+  + Espresso: LinkedIn project with data change capture
+  + MySQL binlog parsing
+** issues :notes:
+   + Sqoop already discussed: non-local, Java dependencies
+   + Espresso as a installable system does not sound ready, plus would be a huge
+     project to migrate to
+   + Not as reliable text serialization, statement logging insufficient for many
+     changes
+
+* Overview :slide:center:
+  [[file:img/hadoop-overview.png]]
+
+* Tips: Input :slide:center:
+  [[file:workers.png]]
+** Change Gear :notes:
+   + So if Hadoop's strength is transforming data, I want to talk about some tips
+     for making sure your data is easily transformed and useful for a variety of
+     outputs
+
+* Logging Format :slide:
+  + Use a machine parsable format for logs: JSON, Avro, etc.
+  + Aim for one line per service per request
+  + Use standard fields, but allow for "extras"
+  + Try to log every ID on a page
+** Notes :notes:
+   + Yelp uses Ranger
+   + We're still standardizing on fields, but still is causing some pain
+   + Must allow your developers to iterate quickly, but there's two iterations
+     to consider: the developer consuming the logs, and the developer logging
+   + Eg. in a Yelp search result, we'd like to see every business ID we
+     displayed, even if it wasn't clicked so we can collect click-through
+     metrics
+   + Some of your pages may have "similar items"... same deal
+
+* Resources :slide:
+  + [[Unified Logging Infrastructure for Data Analytics at Twitter][http://sites.computer.org/debull/A12june/pipeline.pdf]]
+  + Uses standard fields for automated metrics calculations
+  + [[Building LinkedIn's Real-time Activity Data Pipeline][http://sites.computer.org/debull/A12june/pipeline.pdf]]
+  + Automatic materialized view of logs based on standard fields
+
+* Tips: Output :slide:center:
+  [[file:img/output.jpg]]
+
+* Outputs :slide:
+  + Know your S3 consistency guarantees
+  + Hadoop OutputFormats provide flexibility 
+  + Use standard formats and paths
+** AWS :notes:
+   + S3 Hint: there are almost none
+   + OutputFormats can give you ability to write in almost any format: to
+     multiple subdirectories, in a binary format, etc. Keep in mind the format
+     you'd like to transform to, and let Hadoop do the work
+   + Hive, HBase, others add-ons have expected path and output format. Even if
+     you're not going to use them now, default to their standard when writing
+     out. They've thought about issues and makes future compatibility easier
+
+* Resources :slide:
+  + [[S3mper: Consistency in the Cloud][http://techblog.netflix.com/2014/01/s3mper-consistency-in-cloud.html]]
+  + [[InfoQ: Exploring Hadoop OutputFormat][http://www.infoq.com/articles/HadoopOutputFormat/]]
+  + [[Intro to Hive Partitioning][http://www.brentozar.com/archive/2013/03/introduction-to-hive-partitioning/]]
+
+* Take Aways :slide:
+  + Hadoop is most effective as a system to transform data
+  + Data must be transformed for consumption by targeted systems
+  + Systems modeled as views are understandable, idempotent, robust
+
+* Thank You :slide:center:
+  [[file:img/smile.png]]
+
+#+TAGS: slide(s)
+
+#+STYLE: <link rel="stylesheet" type="text/css" href="production/common.css" />
+#+STYLE: <link rel="stylesheet" type="text/css" href="production/screen.css" media="screen" />
+#+STYLE: <link rel="stylesheet" type="text/css" href="production/projection.css" media="projection" />
+#+STYLE: <link rel="stylesheet" type="text/css" href="production/yelp.css" media="projection" />
+#+STYLE: <link rel="stylesheet" type="text/css" href="production/presenter.css" media="presenter" />
+#+STYLE: <link href='http://fonts.googleapis.com/css?family=Fredericka+the+Great|Basic' rel='stylesheet' type='text/css'>
+#+BEGIN_HTML
+<script type="text/javascript" src="production/org-html-slideshow.js"></script>
+#+END_HTML
+
+# Local Variables:
+# org-export-html-style-include-default: nil
+# org-export-html-style-include-scripts: nil
+# End:
