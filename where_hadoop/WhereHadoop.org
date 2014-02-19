@@ -207,7 +207,7 @@
      format
 
 * Upload to S3 :slide:
-  + Writeen using Python boto library
+  + Written using Python boto library
   + Uses multipart upload for large files
   + Open Source: https://github.com/Yelp/s3mysqldump
 ** Wraps up :notes:
@@ -249,7 +249,7 @@
   [[file:img/hadoop-overview.png]]
 
 * Tips: Input :slide:center:
-  [[file:workers.png]]
+  [[file:img/workers.png]]
 ** Change Gear :notes:
    + So if Hadoop's strength is transforming data, I want to talk about some tips
      for making sure your data is easily transformed and useful for a variety of
