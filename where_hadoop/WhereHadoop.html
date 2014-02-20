@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>WhereHadoop</title>
-<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="WhereHadoop"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2014-02-19T03:32-0800"/>
+<meta name="generated" content="2014-02-19T17:32-0800"/>
 <meta name="author" content="Jim Blomo"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -45,7 +45,7 @@
 <li><a href="#sec-2-1">2.1 Ideal</a></li>
 </ul>
 </li>
-<li><a href="#sec-3">3 Don't Exist</a>
+<li><a href="#sec-3">3 Doesn't Exist</a>
 <ul>
 <li><a href="#sec-3-1">3.1 Unfortunately</a></li>
 </ul>
@@ -75,7 +75,7 @@
 <li><a href="#sec-8-1">8.1 Output</a></li>
 </ul>
 </li>
-<li><a href="#sec-9">9 Contrast</a>
+<li><a href="#sec-9">9 Contrast "Processing"</a>
 <ul>
 <li><a href="#sec-9-1">9.1 Mutable</a></li>
 </ul>
@@ -137,26 +137,36 @@
 </ul>
 </li>
 <li><a href="#sec-22">22 Overview</a></li>
-<li><a href="#sec-23">23 Tips: Input</a>
+<li><a href="#sec-23">23 Example: Autosuggest</a>
 <ul>
-<li><a href="#sec-23-1">23.1 Change Gear</a></li>
+<li><a href="#sec-23-1">23.1 Views</a></li>
 </ul>
 </li>
-<li><a href="#sec-24">24 Logging Format</a>
+<li><a href="#sec-24">24 Example: Externally</a>
 <ul>
-<li><a href="#sec-24-1">24.1 Notes</a></li>
+<li><a href="#sec-24-1">24.1 Company examples</a></li>
 </ul>
 </li>
-<li><a href="#sec-25">25 Resources</a></li>
-<li><a href="#sec-26">26 Tips: Output</a></li>
-<li><a href="#sec-27">27 Outputs</a>
+<li><a href="#sec-25">25 Tips: Input</a>
 <ul>
-<li><a href="#sec-27-1">27.1 AWS</a></li>
+<li><a href="#sec-25-1">25.1 Change Gear</a></li>
 </ul>
 </li>
-<li><a href="#sec-28">28 Resources</a></li>
-<li><a href="#sec-29">29 Take Aways</a></li>
-<li><a href="#sec-30">30 Thank You</a></li>
+<li><a href="#sec-26">26 Logging Format</a>
+<ul>
+<li><a href="#sec-26-1">26.1 Notes</a></li>
+</ul>
+</li>
+<li><a href="#sec-27">27 Resources</a></li>
+<li><a href="#sec-28">28 Tips: Output</a></li>
+<li><a href="#sec-29">29 Outputs</a>
+<ul>
+<li><a href="#sec-29-1">29.1 AWS</a></li>
+</ul>
+</li>
+<li><a href="#sec-30">30 Resources</a></li>
+<li><a href="#sec-31">31 Take Aways</a></li>
+<li><a href="#sec-32">32 Thank You</a></li>
 </ul>
 </div>
 </div>
@@ -169,6 +179,9 @@
 </p>
 <p>
   <a href="https://twitter.com/jimblomo">@jimblomo</a>
+</p>
+<p>
+  <img src="img/chains.jpg"  alt="img/chains.jpg" />
 </p>
 </div>
 
@@ -183,7 +196,8 @@
 </li>
 <li>This talk is a bit different: it's about the stuff <b>around</b> Hadoop
 </li>
-<li>How do we get data in? Data out?  Lessons learned.
+<li>How does Hadoop fit into our ecosystem, and some useful analogies that I
+     use when thinking about how to best use it
 </li>
 </ul>
 
@@ -242,7 +256,7 @@
 </div>
 
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Don't Exist &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> Doesn't Exist &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
 <div class="outline-text-2" id="text-3">
 
 <p>  <img src="img/true.jpg"  alt="img/true.jpg" />
@@ -313,14 +327,13 @@
 <ul>
 <li>Most important management problem: having the right data!
 </li>
-<li>Hadoop transforms data into purposeful formats
+<li>Hadoop <b>transforms data</b> from a format required for one purpose, to a <b>new     format</b> required for another
+</li>
+<li>Create an independent <b>view</b> of the data
 </li>
 </ul>
 
 
-<p>
-  <img src="img/transformed.jpg"  alt="img/transformed.jpg" />
-</p>
 </div>
 
 <div id="outline-container-5-1" class="outline-3">
@@ -334,6 +347,12 @@
 <li>Hadoop is in the middle of all of the systems that have been chosen to
      fulfill a specific purpose
 </li>
+<li>"view" has a specific database meaning that I think is appropriate for
+     Hadoop. I'll explain this a bit.
+</li>
+<li>but first: of course Hadoop transforms data&hellip; don't all programs? How is
+     this way of thinking different?
+</li>
 </ul>
 
 
@@ -343,7 +362,7 @@
 </div>
 
 <div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> Contrast &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<h2 id="sec-6"><span class="section-number-2">6</span> Contrast &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
 <div class="outline-text-2" id="text-6">
 
 <ul>
@@ -355,7 +374,8 @@
 </li>
 </ul>
 
-
+<p>  <img src="img/transformed.jpg"  alt="img/transformed.jpg" />
+</p>
 </div>
 
 <div id="outline-container-6-1" class="outline-3">
@@ -375,6 +395,9 @@
 </li>
 <li>How do those systems recover from error? How do we know what the source of
      truth is? Can we re-run processing if there is more data?
+</li>
+<li>Can't sprinkle Hadoop dust on a problem and expect it to work without
+     modification
 </li>
 <li>Let's look at some examples
 </li>
@@ -461,7 +484,7 @@
 </div>
 
 <div id="outline-container-9" class="outline-2">
-<h2 id="sec-9"><span class="section-number-2">9</span> Contrast &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
+<h2 id="sec-9"><span class="section-number-2">9</span> Contrast "Processing" &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
 <div class="outline-text-2" id="text-9">
 
 <ul>
@@ -689,11 +712,11 @@
 <div class="outline-text-2" id="text-15">
 
 <ul>
-<li>Views that combine OLTP data with logs
+<li>Views that combine business data with logs
 </li>
-<li>Search behavior per category
+<li>Search Suggest: autocomplete business names
 </li>
-<li>Queries in logs; categories in database
+<li>Queries in logs; business names in database
 </li>
 </ul>
 
@@ -708,12 +731,15 @@
 <li>We regularly run algorithms that need data on behavior around and item, and
      properties of that item
 </li>
-<li>When someone searches for "burrito" we should probably show results in the
-     Mexican restaurant category, rather than a sandwich place that a reviewer
-     mentions burrito in
+<li>If someone is constantly searching for Garage, offer suggestion for Garage
+     Cafe
 </li>
 <li>So we need data that is stored in the database to be available to Hadoop
      jobs that are generating metrics views
+</li>
+<li>For some processes, we still do an adhoc upload of some data. But we are
+     moving toward to more full-fledged process where all database data is made
+     available to Hadoop
 </li>
 </ul>
 
@@ -949,16 +975,91 @@
 </div>
 
 <div id="outline-container-23" class="outline-2">
-<h2 id="sec-23"><span class="section-number-2">23</span> Tips: Input &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<h2 id="sec-23"><span class="section-number-2">23</span> Example: Autosuggest &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
 <div class="outline-text-2" id="text-23">
+
+<ul>
+<li>Hadoop job outputs to a format that can be loaded into our autosuggest
+    service
+</li>
+<li>Service periodicly loads new data from search behavior and new businesses
+</li>
+<li>π<sub>searches</sub> (Logs ⨝ Business Table)
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-23-1" class="outline-3">
+<h3 id="sec-23-1"><span class="section-number-3">23.1</span> Views &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-23-1">
+
+<ul>
+<li>In database nomenclature, we could consider this a projection of search
+    suggestions based on the union of activity logs and records from the business table
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-24" class="outline-2">
+<h2 id="sec-24"><span class="section-number-2">24</span> Example: Externally &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="two_col">two_col</span></span></h2>
+<div class="outline-text-2" id="text-24">
+
+<ul>
+<li>LinkedIn: <b>Voldemort</b> KV store loads in LevelDBs created in Hadoop
+</li>
+<li>Netflix: bulk exports data from Cassandra (<b>Aegisthus</b>)
+</li>
+<li>BackType: <b>ElephantDB</b> KV store loaded from Hadoop
+</li>
+</ul>
+
+
+</div>
+
+<div id="outline-container-24-1" class="outline-3">
+<h3 id="sec-24-1"><span class="section-number-3">24.1</span> Company examples &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-24-1">
+
+<ul>
+<li>LinkedIn having the same problems with loading data generated from Hadoop
+     batches, so created voldemort
+</li>
+<li>Netflix was having trouble using "normal" APIs to stream out data, so were
+     able to export the SSTables directly out of Cassandra and read them with
+     Hadoop
+</li>
+<li>Hadoop's strength at being able to create views from a wide range of
+     systems
+</li>
+<li>BackType now in Twitter, created ElephantDB, which loads berkeleyDB files
+     from Hadoop and can be optionally incrementally updated
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-25" class="outline-2">
+<h2 id="sec-25"><span class="section-number-2">25</span> Tips: Input &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-25">
 
 <p>  <img src="img/workers.png"  alt="img/workers.png" />
 </p>
 </div>
 
-<div id="outline-container-23-1" class="outline-3">
-<h3 id="sec-23-1"><span class="section-number-3">23.1</span> Change Gear &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
-<div class="outline-text-3" id="text-23-1">
+<div id="outline-container-25-1" class="outline-3">
+<h3 id="sec-25-1"><span class="section-number-3">25.1</span> Change Gear &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-25-1">
 
 <ul>
 <li>So if Hadoop's strength is transforming data, I want to talk about some tips
@@ -973,9 +1074,9 @@
 
 </div>
 
-<div id="outline-container-24" class="outline-2">
-<h2 id="sec-24"><span class="section-number-2">24</span> Logging Format &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
-<div class="outline-text-2" id="text-24">
+<div id="outline-container-26" class="outline-2">
+<h2 id="sec-26"><span class="section-number-2">26</span> Logging Format &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-26">
 
 <ul>
 <li>Use a machine parsable format for logs: JSON, Avro, etc.
@@ -991,9 +1092,9 @@
 
 </div>
 
-<div id="outline-container-24-1" class="outline-3">
-<h3 id="sec-24-1"><span class="section-number-3">24.1</span> Notes &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
-<div class="outline-text-3" id="text-24-1">
+<div id="outline-container-26-1" class="outline-3">
+<h3 id="sec-26-1"><span class="section-number-3">26.1</span> Notes &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-26-1">
 
 <ul>
 <li>Yelp uses Ranger
@@ -1017,9 +1118,9 @@
 
 </div>
 
-<div id="outline-container-25" class="outline-2">
-<h2 id="sec-25"><span class="section-number-2">25</span> Resources &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
-<div class="outline-text-2" id="text-25">
+<div id="outline-container-27" class="outline-2">
+<h2 id="sec-27"><span class="section-number-2">27</span> Resources &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-27">
 
 <ul>
 <li><a href="#Unified-Logging-Infrastructure-for-Data-Analytics-at-Twitter">http://sites.computer.org/debull/A12june/pipeline.pdf</a>
@@ -1037,9 +1138,9 @@
 
 </div>
 
-<div id="outline-container-26" class="outline-2">
-<h2 id="sec-26"><span class="section-number-2">26</span> Tips: Output &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
-<div class="outline-text-2" id="text-26">
+<div id="outline-container-28" class="outline-2">
+<h2 id="sec-28"><span class="section-number-2">28</span> Tips: Output &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-28">
 
 <p>  <img src="img/output.jpg"  alt="img/output.jpg" />
 </p>
@@ -1047,9 +1148,9 @@
 
 </div>
 
-<div id="outline-container-27" class="outline-2">
-<h2 id="sec-27"><span class="section-number-2">27</span> Outputs &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
-<div class="outline-text-2" id="text-27">
+<div id="outline-container-29" class="outline-2">
+<h2 id="sec-29"><span class="section-number-2">29</span> Outputs &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-29">
 
 <ul>
 <li>Know your S3 consistency guarantees
@@ -1063,9 +1164,9 @@
 
 </div>
 
-<div id="outline-container-27-1" class="outline-3">
-<h3 id="sec-27-1"><span class="section-number-3">27.1</span> AWS &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
-<div class="outline-text-3" id="text-27-1">
+<div id="outline-container-29-1" class="outline-3">
+<h3 id="sec-29-1"><span class="section-number-3">29.1</span> AWS &nbsp;&nbsp;&nbsp;<span class="tag"><span class="notes">notes</span></span></h3>
+<div class="outline-text-3" id="text-29-1">
 
 <ul>
 <li>S3 Hint: there are almost none
@@ -1086,9 +1187,9 @@
 
 </div>
 
-<div id="outline-container-28" class="outline-2">
-<h2 id="sec-28"><span class="section-number-2">28</span> Resources &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
-<div class="outline-text-2" id="text-28">
+<div id="outline-container-30" class="outline-2">
+<h2 id="sec-30"><span class="section-number-2">30</span> Resources &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-30">
 
 <ul>
 <li><a href="#S3mper-Consistency-in-the-Cloud">http://techblog.netflix.com/2014/01/s3mper-consistency-in-cloud.html</a>
@@ -1104,9 +1205,9 @@
 
 </div>
 
-<div id="outline-container-29" class="outline-2">
-<h2 id="sec-29"><span class="section-number-2">29</span> Take Aways &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
-<div class="outline-text-2" id="text-29">
+<div id="outline-container-31" class="outline-2">
+<h2 id="sec-31"><span class="section-number-2">31</span> Take Aways &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span></span></h2>
+<div class="outline-text-2" id="text-31">
 
 <ul>
 <li>Hadoop is most effective as a system to transform data
@@ -1122,9 +1223,9 @@
 
 </div>
 
-<div id="outline-container-30" class="outline-2">
-<h2 id="sec-30"><span class="section-number-2">30</span> Thank You &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
-<div class="outline-text-2" id="text-30">
+<div id="outline-container-32" class="outline-2">
+<h2 id="sec-32"><span class="section-number-2">32</span> Thank You &nbsp;&nbsp;&nbsp;<span class="tag"><span class="slide">slide</span>&nbsp;<span class="center">center</span></span></h2>
+<div class="outline-text-2" id="text-32">
 
 <p>  <img src="img/smile.png"  alt="img/smile.png" />
 </p>
@@ -1138,9 +1239,9 @@
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2014-02-19T03:32-0800</p>
+<p class="date">Date: 2014-02-19T17:32-0800</p>
 <p class="author">Author: Jim Blomo</p>
-<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.2 with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 23</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.2 with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
 
 </div>

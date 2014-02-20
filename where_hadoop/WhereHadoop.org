@@ -2,11 +2,14 @@
   Jim Blomo
 
   [[https://twitter.com/jimblomo][@jimblomo]]
+
+  [[file:img/chains.jpg]]
 ** Hi :notes:
    + Engineering Manager on one of Yelp's Data mining teams
    + Lots of interesting talks specifically about Hadoop
    + This talk is a bit different: it's about the stuff *around* Hadoop
-   + How do we get data in? Data out?  Lessons learned.
+   + How does Hadoop fit into our ecosystem, and some useful analogies that I
+     use when thinking about how to best use it
 
 * Step Back :slide:
   + What's the ideal data store?
@@ -27,7 +30,7 @@
    + Who has this data store? Who has a single place that can handle all these
      things?
 
-* Don't Exist :slide:center:
+* Doesn't Exist :slide:center:
   [[file:img/true.jpg]]
 ** Unfortunately :notes:
    + Unfortunately, this data store doesn't exist
@@ -48,19 +51,24 @@
 
 * Transforming Data :slide:two_col:
   + Most important management problem: having the right data!
-  + Hadoop transforms data into purposeful formats
-
-  [[file:img/transformed.jpg]]
+  + Hadoop *transforms data* from a format required for one purpose, to a *new
+    format* required for another
+  + Create an independent *view* of the data
 ** Answer :notes:
    + Ultimately, this is the answer to the question "Oh Hadoop, where Art
      thou?"
    + Hadoop is in the middle of all of the systems that have been chosen to
      fulfill a specific purpose
+   + "view" has a specific database meaning that I think is appropriate for
+     Hadoop. I'll explain this a bit.
+   + but first: of course Hadoop transforms data... don't all programs? How is
+     this way of thinking different?
 
-* Contrast :slide:
+* Contrast :slide:two_col:
   + You have big data? You need a Hadoop.
   + Analytics too slow? You need a Hadoop.
   + Running out of memory? You need a Hadoop.
+  [[file:img/transformed.jpg]]
 ** Alternatives :notes:
    + The alternative to this view that Hadoop's best fit is transforming data
      for appropriate systems is that Hadoop is the solution itself for
@@ -71,6 +79,8 @@
      systems
    + How do those systems recover from error? How do we know what the source of
      truth is? Can we re-run processing if there is more data?
+   + Can't sprinkle Hadoop dust on a problem and expect it to work without
+     modification
    + Let's look at some examples
 
 * Metrics :slide:
@@ -95,7 +105,7 @@
    + To a format that can be ingested by MySQL for a purpose built metrics
      system
 
-* Contrast :slide:two_col:
+* Contrast "Processing" :slide:two_col:
   + Read logs
   + Connect to DB
   + Increment counter
@@ -171,17 +181,19 @@
      resolve.
 
 * Source: MySQL :slide:
-  + Views that combine OLTP data with logs
-  + Search behavior per category
-  + Queries in logs; categories in database
+  + Views that combine business data with logs
+  + Search Suggest: autocomplete business names
+  + Queries in logs; business names in database
 ** Challenge :notes:
    + We regularly run algorithms that need data on behavior around and item, and
      properties of that item
-   + When someone searches for "burrito" we should probably show results in the
-     Mexican restaurant category, rather than a sandwich place that a reviewer
-     mentions burrito in
+   + If someone is constantly searching for Garage, offer suggestion for Garage
+     Cafe
    + So we need data that is stored in the database to be available to Hadoop
      jobs that are generating metrics views
+   + For some processes, we still do an adhoc upload of some data. But we are
+     moving toward to more full-fledged process where all database data is made
+     available to Hadoop
 
 * =S3mysqldump= :slide:
   + =mysqldump= writes out data in =INSERT= format
@@ -247,6 +259,30 @@
 
 * Overview :slide:center:
   [[file:img/hadoop-overview.png]]
+
+* Example: Autosuggest :slide:
+  + Hadoop job outputs to a format that can be loaded into our autosuggest
+    service
+  + Service periodicly loads new data from search behavior and new businesses
+  + π_searches (Logs ⨝ Business Table)
+** Views :notes:
+  + In database nomenclature, we could consider this a projection of search
+    suggestions based on the union of activity logs and records from the business table
+
+* Example: Externally :slide:two_col:
+  + LinkedIn: *Voldemort* KV store loads in LevelDBs created in Hadoop
+  + Netflix: bulk exports data from Cassandra (*Aegisthus*)
+  + BackType: *ElephantDB* KV store loaded from Hadoop
+** Company examples :notes:
+   + LinkedIn having the same problems with loading data generated from Hadoop
+     batches, so created voldemort
+   + Netflix was having trouble using "normal" APIs to stream out data, so were
+     able to export the SSTables directly out of Cassandra and read them with
+     Hadoop
+   + Hadoop's strength at being able to create views from a wide range of
+     systems
+   + BackType now in Twitter, created ElephantDB, which loads berkeleyDB files
+     from Hadoop and can be optionally incrementally updated
 
 * Tips: Input :slide:center:
   [[file:img/workers.png]]
