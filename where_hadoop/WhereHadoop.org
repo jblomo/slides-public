@@ -49,7 +49,7 @@
    + Now, we're still making a trade-off here! Managing multiple systems is
      typically more difficult than an all-in-one system
 
-* Transforming Data :slide:two_col:
+* Transforming Data :slide:
   + Most important management problem: having the right data!
   + Hadoop *transforms data* from a format required for one purpose, to a *new
     format* required for another
@@ -83,9 +83,9 @@
      modification
    + Let's look at some examples
 
-* Metrics :slide:
+* Example: Metrics :slide:
   + Metrics are summary of all events
-  + Input: storage of all events
+  + Input: full resolution storage of all events
   + Output: quick lookup by time of event counts
 ** Ideally :notes:
    + Ideally we'd like to store all events
@@ -98,7 +98,7 @@
 
 * Metrics Server :slide:
   + Metrics served out of MySQL
-  + Input: JSON logs
+  + Input: JSON logs, stored in S3
   + Output: MySQL =LOAD DATA= (CSV)
 ** Output :notes:
    + So we view this as a transformation of data from event data in JSON
@@ -142,9 +142,9 @@
      from inputs: it's strength
 
 * Database Views :slide:
-  + Concept of transformed data has a parallel in DB world
+  + Concept of *transformed data* has a parallel in DB world
   + Views: result set of a stored query
-  + Materialized View: pre-executed query, results physically saved
+  + *Materialized View*: pre-executed query, results physically saved
 ** DB :notes:
    + Database views are defined with a query. The output of the query can itself
      be queried like a table
@@ -182,7 +182,7 @@
 
 * Source: MySQL :slide:
   + Views that combine business data with logs
-  + Search Suggest: auto-complete business names
+  + Search Suggest: autocomplete business names
   + Queries in logs; business names in database
 ** Challenge :notes:
    + We regularly run algorithms that need data on behavior around and item, and
@@ -260,8 +260,8 @@
 * Overview :slide:center:
   [[file:img/hadoop-overview.png]]
 
-* Example: Auto-suggest :slide:
-  + Hadoop job outputs to a format that can be loaded into our auto-suggest
+* Example: Autosuggest :slide:
+  + Hadoop job outputs to a format that can be loaded into our autosuggest
     service
   + Service periodically loads new data from search behavior and new businesses
   + π_searches (Logs ⨝ Business Table)
@@ -269,7 +269,7 @@
   + In database nomenclature, we could consider this a projection of search
     suggestions based on the union of activity logs and records from the business table
 
-* Example: Externally :slide:two_col:
+* Example: Externally :slide:
   + LinkedIn: *Voldemort* KV store loads in LevelDBs created in Hadoop
   + Netflix: bulk exports data from Cassandra (*Aegisthus*)
   + BackType: *ElephantDB* KV store loaded from Hadoop
@@ -307,16 +307,16 @@
    + Some of your pages may have "similar items"... same deal
 
 * Resources :slide:
-  + [[Unified Logging Infrastructure for Data Analytics at Twitter][http://sites.computer.org/debull/A12june/pipeline.pdf]]
+  + [[http://sites.computer.org/debull/A12june/pipeline.pdf][Unified Logging Infrastructure for Data Analytics at Twitter]]
   + Uses standard fields for automated metrics calculations
-  + [[Building LinkedIn's Real-time Activity Data Pipeline][http://sites.computer.org/debull/A12june/pipeline.pdf]]
+  + [[http://sites.computer.org/debull/A12june/pipeline.pdf][Building LinkedIn's Real-time Activity Data Pipeline]]
   + Automatic materialized view of logs based on standard fields
 
 * Tips: Output :slide:center:
   [[file:img/output.jpg]]
 
 * Outputs :slide:
-  + Know your S3 consistency guarantees
+  + Know your S3 consistency guarantees (ie. almost none)
   + Hadoop OutputFormats provide flexibility 
   + Use standard formats and paths
 ** AWS :notes:
@@ -327,16 +327,22 @@
    + Hive, HBase, others add-ons have expected path and output format. Even if
      you're not going to use them now, default to their standard when writing
      out. They've thought about issues and makes future compatibility easier
+   + Also expect multi-file outputs. Embrace this: you can download and load in
+     parallel. Work arounds are possible for 1-file output, but are tricky to
+     setup
 
 * Resources :slide:
-  + [[S3mper: Consistency in the Cloud][http://techblog.netflix.com/2014/01/s3mper-consistency-in-cloud.html]]
-  + [[InfoQ: Exploring Hadoop OutputFormat][http://www.infoq.com/articles/HadoopOutputFormat/]]
-  + [[Intro to Hive Partitioning][http://www.brentozar.com/archive/2013/03/introduction-to-hive-partitioning/]]
+  + [[http://techblog.netflix.com/2014/01/s3mper-consistency-in-cloud.html][S3mper: Consistency in the Cloud]]
+  + [[http://www.infoq.com/articles/HadoopOutputFormat/][InfoQ: Exploring Hadoop OutputFormat]]
+  + [[https://github.com/Yelp/oddjob][oddjob]]: OutputFormats for mrjob
+  + [[http://www.brentozar.com/archive/2013/03/introduction-to-hive-partitioning/][Intro to Hive Partitioning]]
 
 * Take Aways :slide:
-  + Hadoop is most effective as a system to transform data
-  + Data must be transformed for consumption by targeted systems
+  + Different performance requirements require different data formats
+  + Hadoop is most effective as a system to batch transform data
   + Systems modeled as views are understandable, idempotent, robust
+** Views :notes:
+   + Views: mostly functional transformation of data
 
 * Thank You :slide:center:
   [[file:img/smile.png]]
