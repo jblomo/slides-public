@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="WhereHadoop"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2014-02-19T17:47-0800"/>
+<meta name="generated" content="2014-02-19T17:50-0800"/>
 <meta name="author" content="Jim Blomo"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -643,11 +643,11 @@
 <div class="outline-text-2" id="text-13">
 
 <ul>
-<li>Hadoop materializes views of data across systems
+<li>Hadoop <b>materializes views</b> of data across systems
 </li>
 <li>Views should be updated when source data changes
 </li>
-<li>Views do not have state beyond the source data
+<li>Views <b>do not have state</b> beyond the source data
 </li>
 </ul>
 
@@ -667,6 +667,10 @@
 </li>
 <li>These properties allow your multiple systems to stay in sync, recover more
      easily, and the operators to understand the state and flow of data
+</li>
+<li>A good dependency management system is essential for updating views. We
+     have an opensource cron replacement called tron, but we'd like to try AWS
+     Data Pipeline.
 </li>
 </ul>
 
@@ -1262,7 +1266,7 @@
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2014-02-19T17:47-0800</p>
+<p class="date">Date: 2014-02-19T17:50-0800</p>
 <p class="author">Author: Jim Blomo</p>
 <p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.2 with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>

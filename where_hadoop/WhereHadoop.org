@@ -159,9 +159,9 @@
    + Unfortunately, these views are only available inside the database
 
 * System Views :slide:
-  + Hadoop materializes views of data across systems
+  + Hadoop *materializes views* of data across systems
   + Views should be updated when source data changes
-  + Views do not have state beyond the source data
+  + Views *do not have state* beyond the source data
 ** Lessons :notes:
    + The database world has done a good job creating systems that are consistent
      and understandable
@@ -169,6 +169,9 @@
      database doesn't fit some of our problems
    + These properties allow your multiple systems to stay in sync, recover more
      easily, and the operators to understand the state and flow of data
+   + A good dependency management system is essential for updating views. We
+     have an opensource cron replacement called tron, but we'd like to try AWS
+     Data Pipeline.
 
 * Contrast :slide:
   + Hadoop and other process simultaneously update systems
