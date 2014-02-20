@@ -182,7 +182,7 @@
 
 * Source: MySQL :slide:
   + Views that combine business data with logs
-  + Search Suggest: autocomplete business names
+  + Search Suggest: auto-complete business names
   + Queries in logs; business names in database
 ** Challenge :notes:
    + We regularly run algorithms that need data on behavior around and item, and
@@ -260,10 +260,10 @@
 * Overview :slide:center:
   [[file:img/hadoop-overview.png]]
 
-* Example: Autosuggest :slide:
-  + Hadoop job outputs to a format that can be loaded into our autosuggest
+* Example: Auto-suggest :slide:
+  + Hadoop job outputs to a format that can be loaded into our auto-suggest
     service
-  + Service periodicly loads new data from search behavior and new businesses
+  + Service periodically loads new data from search behavior and new businesses
   + π_searches (Logs ⨝ Business Table)
 ** Views :notes:
   + In database nomenclature, we could consider this a projection of search
