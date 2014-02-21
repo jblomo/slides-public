@@ -310,7 +310,7 @@
    + Some of your pages may have "similar items"... same deal
 
 * Resources :slide:
-  + [[http://sites.computer.org/debull/A12june/pipeline.pdf][Unified Logging Infrastructure for Data Analytics at Twitter]]
+  + [[http://vldb.org/pvldb/vol5/p1771_georgelee_vldb2012.pdf][Unified Logging Infrastructure for Data Analytics at Twitter]]
   + Uses standard fields for automated metrics calculations
   + [[http://sites.computer.org/debull/A12june/pipeline.pdf][Building LinkedIn's Real-time Activity Data Pipeline]]
   + Automatic materialized view of logs based on standard fields
